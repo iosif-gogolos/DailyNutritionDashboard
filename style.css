@@ -494,13 +494,20 @@ table{
 @media (max-width: 768px){
     .stats-row{
         display:flex;
-        flex-wrap:nowrap;
-        overflow-x:auto;
+        flex-direction:column;
+        align-items:center;
+        overflow-y:auto;
+        overflow-x:hidden;
         gap:0;
-        padding:0 1rem 1rem;
-        margin:0 -1rem 1.25rem;
-        scroll-snap-type:x mandatory;
+        width:100%;
+        margin:0 0 1.25rem;
+        padding:.25rem 0 1rem;
+        max-height:min(72vh, 680px);
+        scroll-snap-type:y mandatory;
+        scroll-padding-top:1rem;
+        scroll-padding-bottom:1rem;
         -webkit-overflow-scrolling:touch;
+        scrollbar-width:none;
     }
 
     .stats-row::-webkit-scrollbar{
@@ -508,15 +515,18 @@ table{
     }
 
     .stats-row > [class*="col-"]{
-        flex:0 0 var(--wallet-card-width);
-        max-width:var(--wallet-card-width);
+        flex:0 0 auto;
+        width:min(100%, 390px);
+        max-width:min(100%, 390px);
         scroll-snap-align:center;
         position:relative;
-        padding-right:0;
+        padding:0;
+        margin:0;
+        cursor:pointer;
     }
 
     .stats-row > [class*="col-"]:not(:first-child){
-        margin-left:calc(var(--wallet-card-overlap) * -1);
+        margin-top:-52px;
     }
 
     .stats-row > [class*="col-"]:nth-child(1){ z-index:4; }
@@ -525,7 +535,15 @@ table{
     .stats-row > [class*="col-"]:nth-child(4){ z-index:1; }
 
     .stats-row .card{
-        min-height:132px;
+        min-height:142px;
+        border-radius:28px;
+        box-shadow:0 16px 34px rgba(15,23,42,.14);
+        transform-origin:center center;
+    }
+
+    .stats-row .col-md-3:focus-visible .card,
+    .stats-row .col-md-3:hover .card{
+        transform:translateY(-2px) scale(1.01);
     }
 
     .upload-zone{
