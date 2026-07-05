@@ -1,0 +1,23 @@
+{
+  "name": "Nutrition Dashboard",
+  "short_name": "Nutrition",
+  "start_url": ".",
+  "scope": ".",
+  "display": "standalone",
+  "background_color": "#f5f7fb",
+  "theme_color": "#0b74ff",
+  "icons": [
+    {
+      "src": "AppIcon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "AppIcon.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}
