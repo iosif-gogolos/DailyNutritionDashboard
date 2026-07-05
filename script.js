@@ -132,7 +132,7 @@ function renderTable(data) {
                 <td>${renderTitleCell(row)}</td>
                 <td>${renderStatusCell(row)}</td>
                 <td>${renderUserCell(row)}</td>
-                <td>${renderUsersCell(row)}</td>
+                <td>${renderAmountCell(row)}</td>
                 <td>${renderNotesCell(row)}</td>
             </tr>
         `;
@@ -188,16 +188,12 @@ function renderUserCell(row) {
     `;
 }
 
-function renderUsersCell(row) {
-    const seed = String(row.type || "").length + String(row.item || "").length;
-    const avatars = ["AB", "CD", "EF"];
-    const active = avatars.slice(0, 3);
-    const count = (seed % 4) + 1;
+function renderAmountCell(row) {
+    const amount = row.amount ? `${row.amount} ${row.unit || ""}`.trim() : "-";
 
     return `
-        <div class="avatar-stack" aria-label="Shared with ${count + 2} users">
-            ${active.map(label => `<span class="avatar">${label}</span>`).join("")}
-            <span class="avatar-count">+${count}</span>
+        <div class="amount-cell">
+            <span class="amount-value">${escapeHtml(amount)}</span>
         </div>
     `;
 }
