@@ -3,6 +3,8 @@ const uploadZone = document.getElementById("uploadZone");
 const selectedFileName = document.getElementById("selectedFileName");
 const tableMeta = document.getElementById("tableMeta");
 const tablePagination = document.getElementById("tablePagination");
+const activityCarousel = document.getElementById("activityCarousel");
+const activityTimelineMeta = document.getElementById("activityTimelineMeta");
 
 const rowsPerPage = 25;
 let currentPage = 1;
@@ -93,6 +95,7 @@ function parseAndRenderCsv(csvText, sourceName) {
 function renderDashboard(data) {
 
     renderSummary(data);
+    renderActivityCarousel(data);
     renderTable(data);
 }
 
@@ -142,6 +145,106 @@ function renderTable(data) {
     const end = Math.min(startIndex + pageRows.length, data.length);
     tableMeta.textContent = data.length === 0 ? "No rows loaded" : `Showing ${start}-${end} of ${data.length}`;
     renderPagination(totalPages);
+}
+
+function renderActivityCarousel(data) {
+    if (!activityCarousel) {
+        return;
+    }
+
+    const timelineEntries = buildTimelineEntries(data);
+
+    if (!timelineEntries.length) {
+        activityCarousel.innerHTML = `
+            <div class="activity-empty">
+                Upload a CSV with dated entries to see the next activity timeline.
+            </div>
+        `;
+
+        if (activityTimelineMeta) {
+            activityTimelineMeta.textContent = "No timeline entries";
+        }
+        return;
+    }
+
+    const now = new Date();
+    const activeIndex = findNextTimelineIndex(timelineEntries, now);
+    const startIndex = Math.max(0, activeIndex - 2);
+    const endIndex = Math.min(timelineEntries.length, activeIndex + 3);
+    const visibleEntries = timelineEntries.slice(startIndex, endIndex);
+
+    activityCarousel.innerHTML = visibleEntries.map((entry, index) => {
+        const absoluteIndex = startIndex + index;
+        const state = absoluteIndex === activeIndex ? "is-active" : absoluteIndex < activeIndex ? "is-past" : "is-future";
+        const label = absoluteIndex === activeIndex ? "Up Next" : absoluteIndex < activeIndex ? "Previous" : "Next in line";
+
+        return `
+            <article class="activity-card ${state}" data-activity-card="${absoluteIndex === activeIndex ? "true" : "false"}">
+                <div class="activity-card-label">${escapeHtml(label)}</div>
+                <div class="activity-card-time">${escapeHtml(formatTimelineTime(entry.timestamp))}</div>
+                <div class="activity-card-title">${escapeHtml(entry.item || entry.type || "Activity")}</div>
+                <div class="activity-card-amount">${escapeHtml(formatTimelineAmount(entry))}</div>
+                <div class="activity-card-type">${escapeHtml(entry.type || "")}</div>
+            </article>
+        `;
+    }).join("");
+
+    if (activityTimelineMeta) {
+        const activeEntry = timelineEntries[activeIndex];
+        const activeText = activeEntry
+            ? `${formatTimelineTime(activeEntry.timestamp)} · ${activeEntry.item || activeEntry.type || "Next activity"}`
+            : "Timeline ready";
+        activityTimelineMeta.textContent = `Now ${formatClockTime(now)} · ${activeText}`;
+    }
+
+    requestAnimationFrame(() => {
+        const activeCard = activityCarousel.querySelector('[data-activity-card="true"]');
+        if (activeCard) {
+            activeCard.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
+        }
+    });
+}
+
+function buildTimelineEntries(data) {
+    return data
+        .filter(row => row && row.date && row.time && String(row.type || "").toLowerCase() !== "summary")
+        .map(row => ({
+            ...row,
+            timestamp: parseRowTimestamp(row),
+        }))
+        .filter(row => row.timestamp instanceof Date && !Number.isNaN(row.timestamp.getTime()))
+        .sort((left, right) => left.timestamp - right.timestamp);
+}
+
+function parseRowTimestamp(row) {
+    return new Date(`${row.date}T${row.time}:00`);
+}
+
+function findNextTimelineIndex(entries, now) {
+    const nextIndex = entries.findIndex(entry => entry.timestamp >= now);
+    return nextIndex === -1 ? entries.length - 1 : nextIndex;
+}
+
+function formatTimelineTime(timestamp) {
+    return timestamp.toLocaleTimeString([], {
+        hour: "numeric",
+        minute: "2-digit",
+    });
+}
+
+function formatClockTime(timestamp) {
+    return timestamp.toLocaleTimeString([], {
+        hour: "numeric",
+        minute: "2-digit",
+    });
+}
+
+function formatTimelineAmount(row) {
+    if (!row.amount) {
+        return "No amount";
+    }
+
+    return `${row.amount} ${row.unit || ""}`.trim();
 }
 
 function renderFavoriteIcon(index) {
