@@ -496,3 +496,15 @@ function getCachedCsv() {
         return "";
     }
 }
+
+function clearCachedCsv() {
+    // Delete the cookie
+    document.cookie =
+        `${encodeURIComponent(csvCookieName)}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/; SameSite=Lax`;
+
+    // Delete localStorage
+    localStorage.removeItem(csvLocalStorageKey);
+
+    // Optional
+    location.reload();
+}
