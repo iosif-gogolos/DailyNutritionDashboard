@@ -72,6 +72,153 @@ body{
     text-align:right;
 }
 
+.stats-row{
+    --wallet-card-width: 78vw;
+    --wallet-card-overlap: 18vw;
+}
+
+.activity-module{
+    background:#ffffff;
+    border:1px solid rgba(15, 23, 42, .08);
+    border-radius:24px;
+    padding:1rem 1rem 0.9rem;
+    box-shadow:0 12px 34px rgba(15,23,42,.08);
+}
+
+.activity-module-header{
+    display:flex;
+    align-items:flex-end;
+    justify-content:space-between;
+    gap:16px;
+    margin-bottom:0.9rem;
+}
+
+.module-kicker{
+    color:#6b7280;
+    font-size:.72rem;
+    text-transform:uppercase;
+    letter-spacing:.12em;
+    font-weight:700;
+}
+
+.module-title{
+    font-size:1.25rem;
+    font-weight:700;
+    color:#0f172a;
+}
+
+.module-meta{
+    color:#64748b;
+    font-size:.9rem;
+    text-align:right;
+}
+
+.activity-carousel{
+    display:flex;
+    gap:12px;
+    overflow-x:auto;
+    padding:0 2px 6px;
+    scroll-snap-type:x proximity;
+    -webkit-overflow-scrolling:touch;
+}
+
+.activity-carousel::-webkit-scrollbar{
+    display:none;
+}
+
+.activity-empty{
+    color:#64748b;
+    font-size:.95rem;
+    padding:1rem 0.25rem 0.25rem;
+}
+
+.activity-card{
+    flex:0 0 180px;
+    border-radius:24px;
+    padding:1rem 1rem 1.05rem;
+    background:linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+    border:1px solid rgba(15, 23, 42, .08);
+    box-shadow:0 10px 24px rgba(15,23,42,.08);
+    scroll-snap-align:center;
+    transition:transform .2s ease, opacity .2s ease, flex-basis .2s ease;
+}
+
+.activity-card-label{
+    color:#0f62fe;
+    font-size:.72rem;
+    font-weight:800;
+    text-transform:uppercase;
+    letter-spacing:.12em;
+    margin-bottom:.7rem;
+}
+
+.activity-card-time{
+    font-size:1rem;
+    font-weight:700;
+    color:#0f172a;
+    margin-bottom:.45rem;
+}
+
+.activity-card-title{
+    font-size:1.05rem;
+    font-weight:700;
+    color:#172033;
+    line-height:1.2;
+    margin-bottom:.35rem;
+}
+
+.activity-card-amount{
+    color:#334155;
+    font-size:.95rem;
+    font-weight:600;
+    margin-bottom:.45rem;
+}
+
+.activity-card-type{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    min-width:68px;
+    padding:.2rem .55rem;
+    border-radius:999px;
+    background:#edf4ff;
+    color:#1d4ed8;
+    font-size:.72rem;
+    font-weight:800;
+    text-transform:uppercase;
+    letter-spacing:.06em;
+}
+
+.activity-card.is-active{
+    flex-basis:250px;
+    transform:translateY(-3px);
+    background:linear-gradient(180deg, #ffffff 0%, #eef5ff 100%);
+    border-color:rgba(15, 98, 254, .22);
+    box-shadow:0 16px 30px rgba(15,98,254,.12);
+}
+
+.activity-card.is-past,
+.activity-card.is-future{
+    opacity:.84;
+}
+
+.amount-cell{
+    display:flex;
+    align-items:center;
+    min-width:0;
+}
+
+.amount-value{
+    display:inline-flex;
+    align-items:center;
+    padding:.2rem .55rem;
+    border-radius:999px;
+    background:#f1f5f9;
+    color:#0f172a;
+    font-size:12px;
+    font-weight:700;
+}
+
 .dashboard-card{
     border:none;
     box-shadow:0 10px 28px rgba(15,23,42,.08);
@@ -345,6 +492,42 @@ table{
 .Activity { background: #e8fff0; }
 
 @media (max-width: 768px){
+    .stats-row{
+        display:flex;
+        flex-wrap:nowrap;
+        overflow-x:auto;
+        gap:0;
+        padding:0 1rem 1rem;
+        margin:0 -1rem 1.25rem;
+        scroll-snap-type:x mandatory;
+        -webkit-overflow-scrolling:touch;
+    }
+
+    .stats-row::-webkit-scrollbar{
+        display:none;
+    }
+
+    .stats-row > [class*="col-"]{
+        flex:0 0 var(--wallet-card-width);
+        max-width:var(--wallet-card-width);
+        scroll-snap-align:center;
+        position:relative;
+        padding-right:0;
+    }
+
+    .stats-row > [class*="col-"]:not(:first-child){
+        margin-left:calc(var(--wallet-card-overlap) * -1);
+    }
+
+    .stats-row > [class*="col-"]:nth-child(1){ z-index:4; }
+    .stats-row > [class*="col-"]:nth-child(2){ z-index:3; }
+    .stats-row > [class*="col-"]:nth-child(3){ z-index:2; }
+    .stats-row > [class*="col-"]:nth-child(4){ z-index:1; }
+
+    .stats-row .card{
+        min-height:132px;
+    }
+
     .upload-zone{
         flex-direction:column;
         align-items:flex-start;
@@ -358,5 +541,22 @@ table{
     .data-table-footer{
         flex-direction:column;
         align-items:flex-start;
+    }
+
+    .activity-module-header{
+        align-items:flex-start;
+        flex-direction:column;
+    }
+
+    .module-meta{
+        text-align:left;
+    }
+
+    .activity-card{
+        flex-basis:72vw;
+    }
+
+    .activity-card.is-active{
+        flex-basis:82vw;
     }
 }
