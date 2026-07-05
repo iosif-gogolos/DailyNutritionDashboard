@@ -5,6 +5,7 @@ const tableMeta = document.getElementById("tableMeta");
 const tablePagination = document.getElementById("tablePagination");
 const activityCarousel = document.getElementById("activityCarousel");
 const activityTimelineMeta = document.getElementById("activityTimelineMeta");
+const statsRow = document.querySelector(".stats-row");
 
 const rowsPerPage = 25;
 let currentPage = 1;
@@ -18,6 +19,8 @@ document.addEventListener("DOMContentLoaded", function() {
         selectedFileName.textContent = "Loaded from browser cache";
         parseAndRenderCsv(cachedCsv, "Cached CSV");
     }
+
+    setupStatsCarousel();
 });
 
 csvFileInput.addEventListener("change", function(e) {
@@ -116,6 +119,32 @@ function renderSummary(data) {
     document.getElementById("activityMinutes").textContent = activityMinutes + " min";
     document.getElementById("mealCount").textContent = mealCount;
     document.getElementById("sleepHours").textContent = sleepHours + " h";
+}
+
+function setupStatsCarousel() {
+    if (!statsRow) {
+        return;
+    }
+
+    const statCards = statsRow.querySelectorAll(".col-md-3");
+
+    statCards.forEach((card, index) => {
+        card.dataset.statIndex = String(index);
+        card.setAttribute("tabindex", "0");
+        card.setAttribute("role", "button");
+
+        const focusCard = () => {
+            card.scrollIntoView({ behavior: "smooth", block: "center", inline: "nearest" });
+        };
+
+        card.addEventListener("click", focusCard);
+        card.addEventListener("keydown", function(event) {
+            if (event.key === "Enter" || event.key === " ") {
+                event.preventDefault();
+                focusCard();
+            }
+        });
+    });
 }
 
 function renderTable(data) {
