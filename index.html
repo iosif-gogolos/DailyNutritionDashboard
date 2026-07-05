@@ -27,7 +27,7 @@
         <h2 class="mb-4">Nutrition Dashboard</h2>
 
         <!-- Dashboard cards -->
-        <div class="row mb-4">
+        <div class="row mb-4 stats-row">
             <div class="col-md-3">
                 <div class="card text-bg-primary">
                     <div class="card-body">
@@ -66,6 +66,18 @@
             </div>
 
         </div>
+
+        <section class="activity-module mb-4">
+            <div class="activity-module-header">
+                <div>
+                    <p class="module-kicker mb-1">Timeline</p>
+                    <h3 class="module-title mb-0">Next activity</h3>
+                </div>
+                <div id="activityTimelineMeta" class="module-meta"></div>
+            </div>
+
+            <div id="activityCarousel" class="activity-carousel" aria-label="Upcoming activities"></div>
+        </section>
 
         <div class="upload-panel mb-4">
             <label class="form-label upload-label" for="csvFile">Upload CSV file</label>
