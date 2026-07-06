@@ -1,0 +1,154 @@
+/* ---------- Hamburger menu ---------- */
+.menu-toggle {
+  display: inline-flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 4px;
+  width: 40px;
+  height: 40px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+}
+.menu-toggle span {
+  display: block;
+  height: 2px;
+  width: 100%;
+  background: currentColor;
+  border-radius: 1px;
+}
+
+.app-menu {
+  position: absolute;
+  right: 12px;
+  top: 56px;
+  min-width: 180px;
+  background: #1e1e22;
+  color: #f2f2f2;
+  border-radius: 10px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+  z-index: 1000;
+  overflow: hidden;
+}
+.app-menu ul { list-style: none; margin: 0; padding: 4px; }
+.app-menu-item {
+  display: block;
+  width: 100%;
+  text-align: left;
+  background: transparent;
+  border: none;
+  color: inherit;
+  font-size: 14px;
+  padding: 10px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.app-menu-item:hover,
+.app-menu-item:focus-visible {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+/* ---------- Snackbar ---------- */
+.snackbar {
+  position: fixed;
+  left: 50%;
+  bottom: 24px;
+  transform: translateX(-50%);
+  width: min(420px, calc(100vw - 32px));
+  background: #1e1e22;
+  color: #f2f2f2;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+  z-index: 1100;
+  overflow: hidden;
+  animation: snackbar-in 0.25s ease-out;
+}
+@keyframes snackbar-in {
+  from { opacity: 0; transform: translate(-50%, 12px); }
+  to   { opacity: 1; transform: translate(-50%, 0); }
+}
+.snackbar-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 16px 10px;
+}
+.snackbar-message { font-size: 14px; line-height: 1.4; }
+.snackbar-actions { display: flex; gap: 8px; flex-shrink: 0; }
+.snackbar-btn {
+  border: none;
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.snackbar-btn-ghost { background: transparent; color: #cfcfd4; }
+.snackbar-btn-ghost:hover { color: #fff; }
+.snackbar-btn-primary { background: #4f8cff; color: #fff; }
+.snackbar-btn-primary:hover { background: #3d78ea; }
+
+.snackbar-timer-track {
+  height: 3px;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.12);
+}
+.snackbar-timer-bar {
+  height: 100%;
+  width: 100%;
+  background: #4f8cff;
+  transform-origin: left;
+  animation: snackbar-countdown linear forwards;
+  animation-duration: 15s; /* keep in sync with SNACKBAR_DURATION_MS in JS */
+}
+@keyframes snackbar-countdown {
+  from { transform: scaleX(1); }
+  to   { transform: scaleX(0); }
+}
+
+/* ---------- Modal ---------- */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1200;
+  padding: 16px;
+}
+.modal-dialog {
+  background: #1e1e22;
+  color: #f2f2f2;
+  width: min(480px, 100%);
+  border-radius: 14px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45);
+  overflow: hidden;
+}
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 18px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+.modal-header h2 { margin: 0; font-size: 17px; }
+.modal-close {
+  background: transparent;
+  border: none;
+  color: inherit;
+  font-size: 22px;
+  cursor: pointer;
+  line-height: 1;
+  padding: 4px 8px;
+}
+.modal-body { padding: 18px; font-size: 14px; line-height: 1.5; }
+.commit-message { font-weight: 600; margin: 0 0 12px; }
+.commit-meta { display: grid; grid-template-columns: auto 1fr; gap: 4px 12px; margin: 0 0 14px; }
+.commit-meta dt { color: #9a9aa2; }
+.commit-meta dd { margin: 0; }
+#commitLink { color: #4f8cff; text-decoration: none; font-size: 13px; }
+#commitLink:hover { text-decoration: underline; }
+#whatsNewLoading, #whatsNewError { color: #9a9aa2; }

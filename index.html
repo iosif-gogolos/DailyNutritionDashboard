@@ -19,9 +19,65 @@
 
 
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="update-notifier.css">
+
 </head>
 
 <body>
+
+    <!-- Hamburger trigger — put this in your header/nav bar -->
+    <button id="menuToggle" class="menu-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="appMenu">
+        <span></span><span></span><span></span>
+    </button>
+
+    <!-- Dropdown menu -->
+    <nav id="appMenu" class="app-menu" hidden>
+        <ul>
+            <li><button id="menuSettingsBtn" class="app-menu-item">Settings</button></li>
+            <li><button id="menuWhatsNewBtn" class="app-menu-item">What's New</button></li>
+        </ul>
+    </nav>
+
+    <!-- Update snackbar (hidden by default, shown via JS when a new SW is waiting) -->
+    <div id="updateSnackbar" class="snackbar" role="status" aria-live="polite" hidden>
+        <div class="snackbar-content">
+            <span class="snackbar-message">A new version of this app is available.</span>
+            <div class="snackbar-actions">
+                <button id="snackbarLearnMore" class="snackbar-btn snackbar-btn-ghost">Learn more</button>
+                <button id="snackbarUpdate" class="snackbar-btn snackbar-btn-primary">Update</button>
+            </div>
+        </div>
+        <div class="snackbar-timer-track">
+            <div id="snackbarTimerBar" class="snackbar-timer-bar"></div>
+        </div>
+    </div>
+
+    <!-- Commit info / "What's New" modal -->
+    <div id="whatsNewModal" class="modal-overlay" hidden>
+        <div class="modal-dialog" role="dialog" aria-modal="true" aria-labelledby="whatsNewTitle">
+            <div class="modal-header">
+                <h2 id="whatsNewTitle">What's New</h2>
+                <button id="whatsNewClose" class="modal-close" aria-label="Close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="whatsNewLoading">Loading latest changes…</div>
+                <div id="whatsNewContent" hidden>
+                    <p class="commit-message" id="commitMessage"></p>
+                    <dl class="commit-meta">
+                        <dt>Author</dt>
+                        <dd id="commitAuthor"></dd>
+                        <dt>Date</dt>
+                        <dd id="commitDate"></dd>
+                        <dt>Commit</dt>
+                        <dd id="commitSha"></dd>
+                    </dl>
+                    <a id="commitLink" href="#" target="_blank" rel="noopener">View on GitHub →</a>
+                </div>
+                <div id="whatsNewError" hidden>Couldn't load the latest commit info right now.</div>
+            </div>
+        </div>
+    </div>
+
 
     <div class="container mt-4">
         <h2 class="mb-4">Nutrition Dashboard</h2>
@@ -90,11 +146,6 @@
                 </div>
                 <div id="selectedFileName" class="upload-filename">No file selected</div>
             </div>
-            <div class="mt-3">
-  <button class="btn btn-outline-danger" onclick="clearCachedCsv()">
-    Clear cached CSV
-  </button>
-</div>
         </div>
 
         <!-- Table -->
@@ -123,12 +174,12 @@
                 <div id="tablePagination" class="table-pagination"></div>
             </div>
         </div>
-      
 
     </div>
 
     <!-- date,time,type,item,amount,unit,notes-->
-
+    <script src="script.js?v=20260706"></script>
+    <script src="update-notifier.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
     <script>
         if ('serviceWorker' in navigator) {
@@ -140,6 +191,8 @@
         }
     </script>
     <script src="script.js"></script>
+
+
 
 </body>
 
