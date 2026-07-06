@@ -1,0 +1,103 @@
+/* ---------- Onboarding modal ---------- */
+.onboarding-dialog {
+  width: min(560px, 100%);
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.onboarding-steps-indicator {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 0 0;
+}
+.step-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.18);
+}
+.step-dot.is-active {
+  background: #4f8cff;
+}
+
+.onboarding-body {
+  overflow-y: auto;
+  flex: 1;
+}
+
+.onboarding-list {
+  margin: 0 0 8px;
+  padding-left: 20px;
+}
+.onboarding-list li { margin-bottom: 6px; }
+
+.onboarding-footnote {
+  color: #9a9aa2;
+  font-size: 13px;
+  margin-top: 14px;
+}
+
+/* Form */
+.onboarding-form { display: flex; flex-direction: column; gap: 12px; }
+.form-row { display: flex; flex-direction: column; gap: 4px; }
+.form-row label { font-size: 13px; color: #cfcfd4; }
+.form-row input,
+.form-row select {
+  background: #2a2a2f;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+  color: #f2f2f2;
+  padding: 8px 10px;
+  font-size: 14px;
+}
+.form-row input:focus,
+.form-row select:focus {
+  outline: none;
+  border-color: #4f8cff;
+}
+.form-row.two-col {
+  flex-direction: row;
+  gap: 12px;
+}
+.form-row.two-col > div {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.form-row.two-col label { font-size: 13px; color: #cfcfd4; }
+
+/* Prompt output */
+.onboarding-prompt-output {
+  width: 100%;
+  background: #14141a;
+  color: #d7d7dc;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 10px;
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  font-size: 12.5px;
+  line-height: 1.5;
+  resize: vertical;
+}
+.onboarding-prompt-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+  flex-wrap: wrap;
+}
+
+/* Footer */
+.modal-footer.onboarding-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 14px 18px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+.modal-footer.onboarding-footer #onboardingBack,
+.modal-footer.onboarding-footer #onboardingSkip {
+  margin-right: auto;
+}

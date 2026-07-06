@@ -20,11 +20,12 @@
 
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="update-notifier.css">
+    <link rel="stylesheet" href="onboarding.css">
+
 
 </head>
 
 <body>
-
     <!-- Hamburger trigger — put this in your header/nav bar -->
     <button id="menuToggle" class="menu-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="appMenu">
         <span></span><span></span><span></span>
@@ -34,6 +35,7 @@
     <nav id="appMenu" class="app-menu" hidden>
         <ul>
             <li><button id="menuSettingsBtn" class="app-menu-item">Settings</button></li>
+            <li><button id="menuDailyPromptBtn" class="app-menu-item">Daily CSV Prompt</button></li>
             <li><button id="menuWhatsNewBtn" class="app-menu-item">What's New</button></li>
         </ul>
     </nav>
@@ -74,6 +76,134 @@
                     <a id="commitLink" href="#" target="_blank" rel="noopener">View on GitHub →</a>
                 </div>
                 <div id="whatsNewError" hidden>Couldn't load the latest commit info right now.</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Onboarding wizard modal — add this alongside your other modals in index.html -->
+    <div id="onboardingModal" class="modal-overlay" hidden>
+        <div class="modal-dialog onboarding-dialog" role="dialog" aria-modal="true" aria-labelledby="onboardingTitle">
+            <div class="modal-header">
+                <h2 id="onboardingTitle">Get set up</h2>
+                <button id="onboardingClose" class="modal-close" aria-label="Close">&times;</button>
+            </div>
+
+            <div class="onboarding-steps-indicator" aria-hidden="true">
+                <span class="step-dot" data-step="1"></span>
+                <span class="step-dot" data-step="2"></span>
+                <span class="step-dot" data-step="3"></span>
+                <span class="step-dot" data-step="4"></span>
+            </div>
+
+            <div class="modal-body onboarding-body">
+
+                <!-- Step 1: Welcome -->
+                <section class="onboarding-step" data-step="1">
+                    <p>This app reads a CSV of your day — hydration, meals, activity, and sleep. You don't fill it in by
+                        hand: an AI writes it for you.</p>
+                    <p>Here's the loop:</p>
+                    <ol class="onboarding-list">
+                        <li>Tell us your basics once (height, weight, goals, diet)</li>
+                        <li>We build a ready-to-paste prompt for ChatGPT / Claude</li>
+                        <li>The AI hands back a CSV → you drop it into the dashboard</li>
+                        <li>Repeat step 2–3 each morning to plan your day</li>
+                    </ol>
+                </section>
+
+                <!-- Step 2: Profile form -->
+                <section class="onboarding-step" data-step="2" hidden>
+                    <form id="onboardingProfileForm" class="onboarding-form">
+                        <div class="form-row">
+                            <label for="obHeight">Height (cm)</label>
+                            <input type="number" id="obHeight" min="100" max="250" required>
+                        </div>
+                        <div class="form-row">
+                            <label for="obWeight">Weight (kg)</label>
+                            <input type="number" id="obWeight" min="30" max="300" required>
+                        </div>
+                        <div class="form-row">
+                            <label for="obAge">Age</label>
+                            <input type="number" id="obAge" min="10" max="110" required>
+                        </div>
+                        <div class="form-row">
+                            <label for="obGender">Gender</label>
+                            <select id="obGender">
+                                <option value="female">Female</option>
+                                <option value="male">Male</option>
+                                <option value="other">Other / prefer not to say</option>
+                            </select>
+                        </div>
+                        <div class="form-row">
+                            <label for="obGoal">Activity goal</label>
+                            <select id="obGoal">
+                                <option value="Lose weight">Lose weight</option>
+                                <option value="Maintain weight">Maintain weight</option>
+                                <option value="Build muscle">Build muscle</option>
+                                <option value="Improve endurance">Improve endurance</option>
+                                <option value="General health">General health</option>
+                            </select>
+                        </div>
+                        <div class="form-row">
+                            <label for="obDiet">Dietary preference</label>
+                            <select id="obDiet">
+                                <option value="No restriction">No restriction</option>
+                                <option value="Vegetarian">Vegetarian</option>
+                                <option value="Vegan">Vegan</option>
+                                <option value="Pescatarian">Pescatarian</option>
+                                <option value="Keto / low-carb">Keto / low-carb</option>
+                                <option value="Halal">Halal</option>
+                                <option value="Kosher">Kosher</option>
+                            </select>
+                        </div>
+                        <div class="form-row">
+                            <label for="obAllergies">Allergies / foods to avoid</label>
+                            <input type="text" id="obAllergies" placeholder="e.g. peanuts, lactose — or leave blank">
+                        </div>
+                        <div class="form-row two-col">
+                            <div>
+                                <label for="obWakeTime">Usual wake time</label>
+                                <input type="time" id="obWakeTime" value="07:00">
+                            </div>
+                            <div>
+                                <label for="obSleepTime">Usual bedtime</label>
+                                <input type="time" id="obSleepTime" value="23:00">
+                            </div>
+                        </div>
+                    </form>
+                </section>
+
+                <!-- Step 3: Generated prompt -->
+                <section class="onboarding-step" data-step="3" hidden>
+                    <p>Copy this, paste it into ChatGPT or Claude, and paste back whatever CSV it gives you.</p>
+                    <textarea id="onboardingPromptOutput" class="onboarding-prompt-output" readonly
+                        rows="10"></textarea>
+                    <div class="onboarding-prompt-actions">
+                        <button id="onboardingCopyPrompt" class="snackbar-btn snackbar-btn-primary" type="button">Copy
+                            prompt</button>
+                        <a id="onboardingOpenChatGPT" class="snackbar-btn snackbar-btn-ghost"
+                            href="https://chat.openai.com/" target="_blank" rel="noopener">Open ChatGPT →</a>
+                    </div>
+                </section>
+
+                <!-- Step 4: Import instructions -->
+                <section class="onboarding-step" data-step="4" hidden>
+                    <p>Almost done:</p>
+                    <ol class="onboarding-list">
+                        <li>Copy the AI's reply — it should be plain CSV text, nothing else</li>
+                        <li>Save it as a <code>.csv</code> file, or paste it directly if your AI tool lets you download
+                            one</li>
+                        <li>Drop that file onto the upload zone on the dashboard</li>
+                    </ol>
+                    <p class="onboarding-footnote">Tomorrow, open the hamburger menu → <strong>Daily CSV Prompt</strong>
+                        to jump straight back to step 3 with your saved profile.</p>
+                </section>
+
+            </div>
+
+            <div class="modal-footer onboarding-footer">
+                <button id="onboardingBack" class="snackbar-btn snackbar-btn-ghost" type="button">Back</button>
+                <button id="onboardingSkip" class="snackbar-btn snackbar-btn-ghost" type="button">Skip</button>
+                <button id="onboardingNext" class="snackbar-btn snackbar-btn-primary" type="button">Next</button>
             </div>
         </div>
     </div>
@@ -180,8 +310,10 @@
     <!-- date,time,type,item,amount,unit,notes-->
     <script src="script.js?v=20260706"></script>
     <script src="update-notifier.js"></script>
+    <script src="onboarding.js"></script>
+
     <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
-  
+
 
 
 
