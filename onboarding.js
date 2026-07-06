@@ -6,10 +6,36 @@
   "use strict";
 
   const PROFILE_KEY = "dnd_user_profile";
-  const ONBOARDING_DONE_KEY = "dnd_onboarding_complete";
 
   let currentStep = 1;
   const TOTAL_STEPS = 4;
+
+  // ---------- CSV data presence ----------
+  // script.js is a plain (non-module) script, so its top-level function
+  // declarations — including getCachedCsv() — attach to window and are
+  // callable from here. This checks the SAME cookie + localStorage source
+  // script.js itself reads from, so the two never disagree.
+
+  function hasCsvData() {
+    try {
+      if (typeof window.getCachedCsv === "function") {
+        return Boolean(window.getCachedCsv());
+      }
+    } catch (err) {
+      console.warn("Could not check cached CSV via getCachedCsv():", err);
+    }
+
+    // Fallback if script.js hasn't defined it yet or loads in a different order
+    try {
+      if (localStorage.getItem("csvReaderCache")) return true;
+    } catch (err) {
+      /* ignore */
+    }
+    const cookieMatch = document.cookie
+      .split("; ")
+      .some((entry) => entry.startsWith("csvReaderCache="));
+    return cookieMatch;
+  }
 
   // ---------- Profile persistence ----------
 
@@ -164,12 +190,10 @@ Return nothing but the CSV.`;
   }
 
   function finishOnboarding() {
-    localStorage.setItem(ONBOARDING_DONE_KEY, "true");
     closeOnboardingModal();
   }
 
   function skipOnboarding() {
-    localStorage.setItem(ONBOARDING_DONE_KEY, "true");
     closeOnboardingModal();
   }
 
@@ -247,11 +271,25 @@ Return nothing but the CSV.`;
       });
     }
 
-    // Auto-launch full onboarding on first visit only
-    if (localStorage.getItem(ONBOARDING_DONE_KEY) !== "true") {
+    // Auto-launch onboarding only when there's no CSV data currently loaded —
+    // covers first-ever visit AND any time the cached CSV has been cleared/expired.
+    if (!hasCsvData()) {
       openOnboardingModal(1);
     }
   }
+
+  // Exposed so a future "clear data" button in script.js can call this
+  // right after clearing the cache, to immediately reopen onboarding.
+  window.dndOnboarding = {
+    checkAndOpen: function () {
+      if (!hasCsvData()) {
+        openOnboardingModal(1);
+      } else {
+        closeOnboardingModal();
+      }
+    },
+    openDailyPrompt: openDailyPrompt,
+  };
 
   document.addEventListener("DOMContentLoaded", setup);
 })();
